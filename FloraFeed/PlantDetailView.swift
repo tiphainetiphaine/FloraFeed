@@ -63,7 +63,12 @@ struct PlantDetailView: View {
                 .navigationTitle(plant.name)
                 .edgesIgnoringSafeArea(.bottom)
             }
-        }
+        }.onAppear(perform: {
+            selectedLighting = plant.idealLighting;
+            selectedMoisture = plant.moisture;
+            selectedHumidity = plant.humidity;
+            selectedTemperature = plant.temperature;
+        })
     }
     
     func lightingChange(lighting: LIGHTING) {
