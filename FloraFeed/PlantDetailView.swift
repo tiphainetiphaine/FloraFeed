@@ -52,6 +52,8 @@ struct PlantDetailView: View {
                                 }
                             }
                         }.frame(height: 250).scrollDisabled(true)
+                        
+                        
                         NavigationLink {
                             ContentView(plant: plant)
                         } label: {

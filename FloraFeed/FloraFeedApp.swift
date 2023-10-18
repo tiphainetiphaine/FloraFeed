@@ -21,12 +21,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct FloraFeedApp: App {
+    
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            if Auth.auth().currentUser != nil {
+                PlantTableView()
+            } else {
+                LoginView()
+            }
         }
     }
 }

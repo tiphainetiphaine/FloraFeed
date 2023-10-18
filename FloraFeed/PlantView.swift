@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct Plant: Identifiable {
     let id = UUID()
@@ -45,6 +46,8 @@ struct PlantTableView: View {
         Plant(name: "Just Thrivin'", photo: "IMG_5720", idealLighting: LIGHTING.SHADE, moisture: MOISTURE.DRY, humidity: HUMIDTY.NORMAL, temperature: TEMPERATURE.NORMAL)
     ]
     
+    let user = Auth.auth().currentUser
+    
     var body: some View {
         NavigationView {
             VStack{
@@ -63,14 +66,21 @@ struct PlantTableView: View {
                 }
                 .navigationTitle("My Plants")
                 .navigationBarItems(trailing: EditButton())
-                
-                //todo actually handle logout
-                NavigationLink {
-                    LoginView()
-                } label: {
-                    Text("Log out").bold().font(.title3)
-                }
+                                
+                Button(action: {
+                    handleSignOut()
+                }, label: {
+                    NavigationLink(destination: LoginView()) { Text("Sign out") }
+                })
             }
         }.navigationBarBackButtonHidden()
+    }
+    
+    func handleSignOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch let error {
+            print ("Error signing out: %@", error)
+        }
     }
 }

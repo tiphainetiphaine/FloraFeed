@@ -14,6 +14,7 @@ struct LoginView: View {
     @State var password: String = ""
     @State var showPassword: Bool = false
     @State var isShowingPlantView = false
+    @State var showingAlert = false
     
     var loginIsDisabled: Bool {
         [email, password].contains(where: \.isEmpty)
@@ -21,13 +22,12 @@ struct LoginView: View {
     
     //todo update colour scheme etc
     var body: some View {
-        NavigationView {
             VStack(alignment: .leading, spacing: 15) {
                 Spacer()
                 
                 TextField("Email",
                           text: $email ,
-                          prompt: Text("Login").foregroundColor(.blue)
+                          prompt: Text("Email").foregroundColor(.blue)
                 )
                 .padding(10)
                 .overlay {
@@ -64,8 +64,7 @@ struct LoginView: View {
                 
                 Spacer()
                 Button {
-                    // handleFirebaseLogin()
-                    toggleLogin()
+                     handleFirebaseLogin()
                 } label: {
                     Text("Login")
                         .font(.title2)
@@ -79,31 +78,29 @@ struct LoginView: View {
                         LinearGradient(colors: [.blue, .red], startPoint: .topLeading, endPoint: .bottomTrailing)
                 )
                 .cornerRadius(20)
-                .disabled(loginIsDisabled) // how to disable while some condition is applied
+                .disabled(loginIsDisabled) 
                 .padding()
-                NavigationLink(destination: PlantTableView(), isActive: $isShowingPlantView) {  }
+                
+                NavigationLink(destination: PlantTableView(), isActive: $isShowingPlantView) {  }.isDetailLink(false)
             }
-        }
+            .navigationBarBackButtonHidden()
+            .alert("Log in failed", isPresented: $showingAlert) {
+                        Button("OK", role: .cancel) { 
+                            showingAlert = false
+                        }
+                    }
     }
     
     func handleFirebaseLogin() {
         if email != "" && password != "" {
             Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
                 if let error = error {
-                    //todo add actual alert action
-                    print("there was an error logging in"+error.localizedDescription)
+                    showingAlert = true
+                    print("There was an error logging in "+error.localizedDescription)
                 } else {
-                    //todo remove logs etc
-                    print("success!")
                     isShowingPlantView = true
                 }
             }
         }
-    }
-    
-    func toggleLogin() {
-        //while testing
-        isShowingPlantView = !isShowingPlantView
-        print(isShowingPlantView)
     }
 }
