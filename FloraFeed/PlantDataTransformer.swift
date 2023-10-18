@@ -91,7 +91,7 @@ struct PlantDataTransformer {
         case .BRIGHT_LIGHT:
             return averageLightLevel > idealLighting.level
         case .SHADE:
-            return averageLightLevel < idealLighting.level
+            return averageLightLevel <= idealLighting.level
         }
     }
     
@@ -107,9 +107,9 @@ struct PlantDataTransformer {
     func isHumidityIdeal(latestData: PlantData, idealHumidity: HUMIDTY) -> Bool {
         switch idealHumidity {
         case .DRY:
-            return latestData.humidity < idealHumidity.level
-        case .NORMAL:
             return latestData.humidity <= idealHumidity.level
+        case .NORMAL:
+            return latestData.humidity <= idealHumidity.level && latestData.humidity > HUMIDTY.DRY.level
         case .HUMID:
             return latestData.humidity > idealHumidity.level
         }
@@ -118,9 +118,9 @@ struct PlantDataTransformer {
     func isTemperatureIdeal(latestData: PlantData, idealTemperature: TEMPERATURE) -> Bool {
         switch idealTemperature {
         case .COLD:
-            return latestData.temperature < idealTemperature.level
-        case .NORMAL:
             return latestData.temperature <= idealTemperature.level
+        case .NORMAL:
+            return latestData.temperature <= idealTemperature.level && latestData.temperature > TEMPERATURE.COLD.level
         case .HOT:
             return latestData.temperature > idealTemperature.level
         }

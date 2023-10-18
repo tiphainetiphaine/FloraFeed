@@ -45,23 +45,24 @@ struct ContentView: View {
                 VStack {
                     Text("Light intensity").bold()
                     Chart {
-                        ForEach(orderedDataLimited) { plant in
+                        ForEach(orderedDataLimited) { data in
                             LineMark(
-                                x: .value("Date / Time", plant.timestamp.formatted(date: Date.FormatStyle.DateStyle.omitted, time: Date.FormatStyle.TimeStyle.shortened)),
-                                y: .value("Light Intensity", plant.lightIntensity)
+                                x: .value("Date / Time", data.timestamp),
+                                y: .value("Light Intensity", getAdjustedLightIntensity(data: data))
                             )
                         }
                     }
+                    .chartYScale(domain: [0, 100])
                 }
                 .padding()
                 Text(getLightingString()).padding()
                 VStack {
                     Text("Moisture (%)").bold()
                     Chart {
-                        ForEach(orderedDataLimited) { plant in
+                        ForEach(orderedDataLimited) { data in
                             LineMark(
-                                x: .value("Date / Time", plant.timestamp.formatted(date: Date.FormatStyle.DateStyle.omitted, time: Date.FormatStyle.TimeStyle.shortened)),
-                                y: .value("Light Intensity", (100-(plant.moisture-1000)*100/1500))
+                                x: .value("Date / Time", data.timestamp),
+                                y: .value("Moisture", getAdjustedMoisture(data: data))
                             )
                         }
                     }
@@ -72,23 +73,24 @@ struct ContentView: View {
                 VStack {
                     Text("Humidity (%)").bold()
                     Chart {
-                        ForEach(orderedDataLimited) { plant in
+                        ForEach(orderedDataLimited) { data in
                             LineMark(
-                                x: .value("Date / Time", plant.timestamp.formatted(date: Date.FormatStyle.DateStyle.omitted, time: Date.FormatStyle.TimeStyle.shortened)),
-                                y: .value("Humidity", plant.humidity)
+                                x: .value("Date / Time", data.timestamp),
+                                y: .value("Humidity", data.humidity)
                             )
                         }
                     }
+                    .chartYScale(domain: [0, 100])
                 }
                 .padding()
                 Text(getHumidityString()).padding()
                 VStack {
                     Text("Temperature (Degrees Celsius)").bold()
                     Chart {
-                        ForEach(orderedDataLimited) { plant in
+                        ForEach(orderedDataLimited) { data in
                             LineMark(
-                                x: .value("Date / Time", plant.timestamp.formatted(date: Date.FormatStyle.DateStyle.omitted, time: Date.FormatStyle.TimeStyle.shortened)),
-                                y: .value("Temperature", plant.temperature)
+                                x: .value("Date / Time", data.timestamp),
+                                y: .value("Temperature", data.temperature)
                             )
                         }
                     }
@@ -118,6 +120,30 @@ struct ContentView: View {
                     self.isTemperatureIdeal = PlantDataTransformer().isTemperatureIdeal(latestData: latestData, idealTemperature: plant.temperature)
                 });
         })
+    }
+    
+    func getAdjustedMoisture(data:PlantData) -> Int {
+        let adjustedMoisture: Int;
+        if (data.moisture > 100) {
+            adjustedMoisture = 100-(data.moisture-1000)*100/1500
+        } else {
+            adjustedMoisture = data.moisture
+        }
+        if adjustedMoisture > 100 {
+            return 100
+        } else if adjustedMoisture < 0 {
+            return 0
+        } else {
+            return adjustedMoisture
+        }
+    }
+    
+    func getAdjustedLightIntensity(data:PlantData) -> Int {
+        if (data.lightIntensity > 1500) {
+            return 100
+        } else {
+            return 100*data.lightIntensity/1500
+        }
     }
     
     func dataRangeChange(dataRange: DATA_RANGE) {
