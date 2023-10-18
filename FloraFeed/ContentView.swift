@@ -18,32 +18,28 @@ enum DATA_RANGE: String, CaseIterable, Identifiable {
 
 struct ContentView: View {
     let plant: Plant
-    
+    @State var latestData: PlantData;
     @State private var arrayOfAllData: [PlantData] = [];
     @State private var orderedDataLimited: [PlantData] = [];
-    @State private var latestData: PlantData = PlantData(id: "", lightIntensity: 800, moisture: 30, humidity: 36, temperature: 20, battery: 80, timestamp: Date())
     @State private var averageLightIntensity: Int = 0;
     @State private var isLightingIdeal: Bool = false;
     @State private var plantNeedsWatering: Bool = false;
     @State private var isHumidityIdeal: Bool = false;
     @State private var isTemperatureIdeal: Bool = false;
     @State private var selectedData: DATA_RANGE = DATA_RANGE.HOURS;
-        
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                Text("Battery level is \(latestData.battery.description)%")
-                    .multilineTextAlignment(.leading)
-                    .padding()
-                    Section {
-                        Picker("See data for:", selection: $selectedData.onChange(dataRangeChange)) {
-                            ForEach(DATA_RANGE.allCases) { option in
-                                Text(String(describing: option.rawValue))
-                            }
+                Section {
+                    Picker("See data for:", selection: $selectedData.onChange(dataRangeChange)) {
+                        ForEach(DATA_RANGE.allCases) { option in
+                            Text(String(describing: option.rawValue))
                         }
                     }
+                }
                 VStack {
-                    Text("Light intensity").bold()
+                    Text("Light intensity (%)").bold()
                     Chart {
                         ForEach(orderedDataLimited) { data in
                             LineMark(
@@ -85,7 +81,7 @@ struct ContentView: View {
                 .padding()
                 Text(getHumidityString()).padding()
                 VStack {
-                    Text("Temperature (Degrees Celsius)").bold()
+                    Text("Temperature (Degrees C)").bold()
                     Chart {
                         ForEach(orderedDataLimited) { data in
                             LineMark(
@@ -101,7 +97,7 @@ struct ContentView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: {
-            PlantDataRepository().getAllData(
+            PlantDataRepository().getAllDataFromFirebase(
                 completionHandler: { array in
                     arrayOfAllData = array
                     

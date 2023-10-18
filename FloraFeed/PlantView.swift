@@ -38,6 +38,32 @@ struct PlantView: View {
     }
 }
 
+struct BatteryView: View {
+    let latestData: PlantData;
+    
+    var body: some View {
+        HStack {
+            Text("Photon battery level is \(latestData.battery.description)%")
+                .padding()
+            getBatteryIcon(data: latestData)
+        }
+    }
+    
+    func getBatteryIcon(data:PlantData) -> Image {
+        if (data.charging) {
+            return Image(systemName: "battery.100.bolt")
+        }
+        
+        if (data.battery > 77) {
+            return Image(systemName: "battery.75")
+        } else if (data.battery > 72) {
+            return Image(systemName: "battery.50")
+        } else {
+            return Image(systemName: "battery.25")
+        }
+    }
+}
+
 struct PlantTableView: View {
     @State private var plants = [
         Plant(name: "The Undying", photo: "IMG_5718", idealLighting: LIGHTING.SHADE, moisture: MOISTURE.DRY, humidity: HUMIDTY.NORMAL, temperature: TEMPERATURE.NORMAL),
@@ -45,7 +71,7 @@ struct PlantTableView: View {
         Plant(name: "On the edge", photo: "IMG_5721", idealLighting: LIGHTING.BRIGHT_LIGHT, moisture: MOISTURE.BONE_DRY, humidity: HUMIDTY.DRY, temperature: TEMPERATURE.HOT),
         Plant(name: "Just Thrivin'", photo: "IMG_5720", idealLighting: LIGHTING.SHADE, moisture: MOISTURE.DRY, humidity: HUMIDTY.NORMAL, temperature: TEMPERATURE.NORMAL)
     ]
-    
+    @State private var latestData: PlantData = PlantData(id: "", lightIntensity: 800, moisture: 30, humidity: 36, temperature: 20, battery: 80, charging: false, timestamp: Date())
     let user = Auth.auth().currentUser
     
     var body: some View {
@@ -53,7 +79,7 @@ struct PlantTableView: View {
             VStack{
                 List {
                     ForEach(plants) { plant in
-                        NavigationLink(destination: PlantDetailView(plant: plant)) {
+                        NavigationLink(destination: PlantDetailView(plant: plant, latestData: latestData)) {
                             PlantView(plant: plant)
                         }
                     }
@@ -66,14 +92,23 @@ struct PlantTableView: View {
                 }
                 .navigationTitle("My Plants")
                 .navigationBarItems(trailing: EditButton())
-                                
+                
+                BatteryView(latestData: latestData).frame(maxWidth: .infinity, alignment: .center)
+                Spacer()
+
                 Button(action: {
                     handleSignOut()
                 }, label: {
                     NavigationLink(destination: LoginView()) { Text("Sign out") }
                 })
             }
-        }.navigationBarBackButtonHidden()
+        }
+        .navigationBarBackButtonHidden()
+        .onAppear {
+            PlantDataRepository().getLimitedDataFromFirebase(limitBy: 1) { dataArray in
+                latestData = dataArray[0]
+            }
+        }
     }
     
     func handleSignOut() {

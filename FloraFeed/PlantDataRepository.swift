@@ -16,6 +16,7 @@ struct PlantData: Identifiable {
     let humidity: Int
     let temperature: Int
     let battery: Int
+    let charging: Bool
     let timestamp: Date
 }
 
@@ -29,16 +30,40 @@ extension PlantData {
             humidity: firebasePlantData["humidity"] as? Int ?? 0,
             temperature: firebasePlantData["temperature"] as? Int ?? 0,
             battery: firebasePlantData["battery"] as? Int ?? 0,
+            charging: firebasePlantData["charging"] as? Bool ?? false,
             timestamp: (firebasePlantData["timestamp"] as! Timestamp).dateValue()
         )
     }
 }
 
 struct PlantDataRepository {
-    func getAllData(completionHandler: @escaping ([PlantData]) -> Void) {
+    func getAllDataFromFirebase(completionHandler: @escaping ([PlantData]) -> Void) {
         
         db.collection("plantData")
             .order(by: "timestamp", descending: true)
+            .getDocuments() { (querySnapshot, error) in
+            
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                print("Successfully retrieved all plant data")
+                var PlantDataArray: [PlantData] = []
+                for document in querySnapshot!.documents {
+                    print("\(document.documentID) => \(document.data())")
+                    let data = document.data()
+                    let id = document.documentID;
+                    let plant = PlantData(id: id, firebasePlantData: data)
+                    PlantDataArray.append(plant)
+                }
+                completionHandler(PlantDataArray)
+            }
+        }
+    }
+    
+    func getLimitedDataFromFirebase(limitBy: Int, completionHandler: @escaping ([PlantData]) -> Void) {
+        
+        db.collection("plantData")
+            .order(by: "timestamp", descending: true).limit(to: limitBy)
             .getDocuments() { (querySnapshot, error) in
             
             if let error = error {

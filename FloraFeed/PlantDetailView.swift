@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct PlantDetailView: View {
-    @State var plant: Plant
+    @State var plant: Plant;
+    @State var latestData: PlantData;
     @State private var selectedLighting: LIGHTING = LIGHTING.SHADE;
     @State private var selectedMoisture: MOISTURE = MOISTURE.DRY;
     @State private var selectedHumidity: HUMIDTY = HUMIDTY.NORMAL;
@@ -55,7 +56,7 @@ struct PlantDetailView: View {
                         
                         
                         NavigationLink {
-                            ContentView(plant: plant)
+                            ContentView(plant: plant, latestData: latestData)
                         } label: {
                             Text("Check Vitals").bold().font(.title3)
                         }
