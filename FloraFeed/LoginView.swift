@@ -84,8 +84,8 @@ struct LoginView: View {
                 NavigationLink(destination: PlantTableView(), isActive: $isShowingPlantView) {  }.isDetailLink(false)
             }
             .navigationBarBackButtonHidden()
-            .alert("Log in failed", isPresented: $showingAlert) {
-                        Button("OK", role: .cancel) { 
+            .alert("Incorrect email or password", isPresented: $showingAlert) {
+                        Button("OK", role: .cancel) {
                             showingAlert = false
                         }
                     }
