@@ -20,21 +20,23 @@ struct Plant: Identifiable {
 
 struct PlantView: View {
     let plant: Plant
+    let latestData: PlantData
     
     var body: some View {
-            HStack {
-                Image(plant.photo)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 70, height: 70)
-                    .cornerRadius(5)
-                    .padding(.leading, 8)
-                Text(plant.name)
-                    .font(.headline)
-                    .lineLimit(1)
-                Spacer()
-            }
-            .padding(.vertical, 8)
+        HStack {
+            Image(plant.photo)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 70, height: 70)
+                .cornerRadius(5)
+                .padding(.leading, 8)
+            Text(plant.name)
+                .font(.headline)
+                .lineLimit(1)
+            BatteryView(latestData: latestData)
+            Spacer()
+        }
+        .padding(.vertical, 8)
     }
 }
 
@@ -43,8 +45,6 @@ struct BatteryView: View {
     
     var body: some View {
         HStack {
-            Text("Photon battery level is \(latestData.battery.description)%")
-                .padding()
             getBatteryIcon(data: latestData)
         }
     }
@@ -80,7 +80,7 @@ struct PlantTableView: View {
                 List {
                     ForEach(plants) { plant in
                         NavigationLink(destination: PlantDetailView(plant: plant, latestData: latestData)) {
-                            PlantView(plant: plant)
+                            PlantView(plant: plant, latestData: latestData)
                         }
                     }
                     .onDelete { indexSet in
@@ -93,14 +93,15 @@ struct PlantTableView: View {
                 .navigationTitle("My Plants")
                 .navigationBarItems(trailing: EditButton())
                 
-                BatteryView(latestData: latestData).frame(maxWidth: .infinity, alignment: .center)
                 Spacer()
-
+                
                 Button(action: {
                     handleSignOut()
                 }, label: {
-                    NavigationLink(destination: LoginView()) { Text("Sign out") }
-                })
+                    NavigationLink(destination: LoginView()) {
+                        Text("Sign out").bold().font(.title3)
+                    }
+                }).padding(.top)
             }
         }
         .navigationBarBackButtonHidden()
