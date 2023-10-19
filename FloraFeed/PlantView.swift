@@ -75,7 +75,7 @@ struct PlantTableView: View {
     @State private var latestData: PlantData = PlantData(id: "", lightIntensity: 800, moisture: 30, humidity: 36, temperature: 20, battery: 80, charging: false, timestamp: Date())
     let user = Auth.auth().currentUser
     @State var notificationsAreAllowed: Bool = false;
-    @State var isSignedOut = false
+    @State var userIsSignedOut = false
     
     var body: some View {
         NavigationView {
@@ -98,7 +98,7 @@ struct PlantTableView: View {
                 
                 Spacer()
                 
-                NavigationLink(destination: LoginView(), isActive: $isSignedOut) {
+                NavigationLink(destination: LoginView(), isActive: $userIsSignedOut) {
                     Button(action: {
                         handleSignOut()
                     }) {
@@ -118,10 +118,9 @@ struct PlantTableView: View {
     }
     
     func handleSignOut() {
-        print("entered handleSignOut")
         do {
             try Auth.auth().signOut()
-            isSignedOut = true
+            userIsSignedOut = true
             print("successfully signed out")
         } catch let error {
             print ("Error signing out: %@", error)

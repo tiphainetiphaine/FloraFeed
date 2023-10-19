@@ -14,7 +14,7 @@ struct LoginView: View {
     @State var email: String = ""
     @State var password: String = ""
     @State var showPassword: Bool = false
-    @State var isShowingPlantView = false
+    @State var userIsLoggedIn = false
     @State var showingAlert = false
     
     var loginIsDisabled: Bool {
@@ -65,7 +65,7 @@ struct LoginView: View {
             
             Spacer()
             
-            NavigationLink(destination: PlantTableView(), isActive: $isShowingPlantView) {
+            NavigationLink(destination: PlantTableView(), isActive: $userIsLoggedIn) {
                 Button(action: {
                     handleFirebaseLogin()
                 }, label: {
@@ -100,7 +100,7 @@ struct LoginView: View {
                     showingAlert = true
                     print("There was an error logging in "+error.localizedDescription)
                 } else {
-                    isShowingPlantView = true
+                    userIsLoggedIn = true
                     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                         if success {
                             print("All set for notifications!")
