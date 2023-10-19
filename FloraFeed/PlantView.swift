@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import UserNotifications
 
 struct Plant: Identifiable {
     let id = UUID()
@@ -73,6 +74,8 @@ struct PlantTableView: View {
     ]
     @State private var latestData: PlantData = PlantData(id: "", lightIntensity: 800, moisture: 30, humidity: 36, temperature: 20, battery: 80, charging: false, timestamp: Date())
     let user = Auth.auth().currentUser
+    @State var notificationsAreAllowed: Bool = false;
+    @State var isSignedOut = false
     
     var body: some View {
         NavigationView {
@@ -95,28 +98,42 @@ struct PlantTableView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    handleSignOut()
-                }, label: {
-                    NavigationLink(destination: LoginView()) {
-                        Text("Sign out").bold().font(.title3)
+                NavigationLink(destination: LoginView(), isActive: $isSignedOut) {
+                    Button(action: {
+                        handleSignOut()
+                    }) {
+                        Text("Sign Out").font(.title3)
                     }
-                }).padding(.top)
+                }.padding(.top)
             }
         }
         .navigationBarBackButtonHidden()
         .onAppear {
             PlantDataRepository().getLimitedDataFromFirebase(limitBy: 1) { dataArray in
                 latestData = dataArray[0]
+                
+                handleNotifications()
             }
         }
     }
     
     func handleSignOut() {
+        print("entered handleSignOut")
         do {
             try Auth.auth().signOut()
+            isSignedOut = true
+            print("successfully signed out")
         } catch let error {
             print ("Error signing out: %@", error)
+        }
+    }
+    
+    func handleNotifications() {
+        notificationsAreAllowed = UserRepository().geUsertNotificationSettings()
+        if (notificationsAreAllowed) {
+            print("so far so good!")
+        } else {
+            print("didn't remember settings")
         }
     }
 }

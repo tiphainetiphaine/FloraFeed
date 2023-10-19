@@ -65,6 +65,7 @@
 		DE4AEA8F2ABF62EC00D83F6E /* PlantDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4AEA8E2ABF62EC00D83F6E /* PlantDataTransformer.swift */; };
 		DE4AEA912ABF907000D83F6E /* PlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4AEA902ABF907000D83F6E /* PlantView.swift */; };
 		DE4AEA932ABFA0B200D83F6E /* PlantDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4AEA922ABFA0B200D83F6E /* PlantDetailView.swift */; };
+		DEABAC732AE135E0001F3E9A /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEABAC722AE135E0001F3E9A /* UserRepository.swift */; };
 		DED2F4CC2ABB8D7300417863 /* FloraFeedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED2F4CB2ABB8D7300417863 /* FloraFeedApp.swift */; };
 		DED2F4CE2ABB8D7300417863 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED2F4CD2ABB8D7300417863 /* ContentView.swift */; };
 		DED2F4D02ABB8D7500417863 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DED2F4CF2ABB8D7500417863 /* Assets.xcassets */; };
@@ -106,6 +107,7 @@
 		DE4AEA8E2ABF62EC00D83F6E /* PlantDataTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDataTransformer.swift; sourceTree = "<group>"; };
 		DE4AEA902ABF907000D83F6E /* PlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantView.swift; sourceTree = "<group>"; };
 		DE4AEA922ABFA0B200D83F6E /* PlantDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailView.swift; sourceTree = "<group>"; };
+		DEABAC722AE135E0001F3E9A /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
 		DED2F4C82ABB8D7300417863 /* FloraFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FloraFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DED2F4CB2ABB8D7300417863 /* FloraFeedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloraFeedApp.swift; sourceTree = "<group>"; };
 		DED2F4CD2ABB8D7300417863 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				DED2F5142ABB986500417863 /* PlantDataRepository.swift */,
 				DE4AEA8E2ABF62EC00D83F6E /* PlantDataTransformer.swift */,
 				DEE373EE2AD2CB6D000B3BAD /* Constants.swift */,
+				DEABAC722AE135E0001F3E9A /* UserRepository.swift */,
 			);
 			path = FloraFeed;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 			files = (
 				DED2F5152ABB986500417863 /* PlantDataRepository.swift in Sources */,
 				DE4AEA932ABFA0B200D83F6E /* PlantDetailView.swift in Sources */,
+				DEABAC732AE135E0001F3E9A /* UserRepository.swift in Sources */,
 				DE4AEA8F2ABF62EC00D83F6E /* PlantDataTransformer.swift in Sources */,
 				DED2F4CE2ABB8D7300417863 /* ContentView.swift in Sources */,
 				DEE373EF2AD2CB6D000B3BAD /* Constants.swift in Sources */,
