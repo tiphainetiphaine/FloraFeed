@@ -13,7 +13,7 @@ struct Plant: Identifiable {
     let id = UUID()
     let name: String
     let photo: String
-    var idealLighting: LIGHTING
+    var lighting: LIGHTING
     var moisture: MOISTURE
     var humidity: HUMIDTY
     var temperature: TEMPERATURE
@@ -34,23 +34,24 @@ struct PlantView: View {
             Text(plant.name)
                 .font(.headline)
                 .lineLimit(1)
-            BatteryView(latestData: latestData)
+            HealthView(latestData: latestData)
             Spacer()
         }
         .padding(.vertical, 8)
     }
 }
 
-struct BatteryView: View {
+struct HealthView: View {
     let latestData: PlantData;
     
     var body: some View {
         HStack {
-            getBatteryIcon(data: latestData)
+            getIconHealthStatus(data: latestData).foregroundStyle(getColorForHealth(data: latestData))
+            getIconForBatteryStatus(data: latestData).foregroundStyle(getColorForBattery(data: latestData))
         }
     }
     
-    func getBatteryIcon(data:PlantData) -> Image {
+    func getIconForBatteryStatus(data:PlantData) -> Image {
         if (data.charging) {
             return Image(systemName: "battery.100.bolt")
         }
@@ -63,15 +64,26 @@ struct BatteryView: View {
             return Image(systemName: "battery.25")
         }
     }
+    
+    func getColorForBattery(data:PlantData) -> Color {
+        if (data.battery <= 72 ) {
+            return .red
+        } else {
+            return .black
+        }
+    }
+    
+    func getIconHealthStatus(data:PlantData) -> Image {
+        return Image(systemName: "leaf.circle")
+    }
+    
+    func getColorForHealth(data:PlantData) -> Color {
+        return .green
+    }
 }
 
 struct PlantTableView: View {
-    @State private var plants = [
-        Plant(name: "The Undying", photo: "IMG_5718", idealLighting: LIGHTING.SHADE, moisture: MOISTURE.DRY, humidity: HUMIDTY.NORMAL, temperature: TEMPERATURE.NORMAL),
-        Plant(name: "Actually fake", photo: "IMG_5716", idealLighting: LIGHTING.SHADE, moisture: MOISTURE.BONE_DRY, humidity: HUMIDTY.DRY, temperature: TEMPERATURE.COLD),
-        Plant(name: "On the edge", photo: "IMG_5721", idealLighting: LIGHTING.BRIGHT_LIGHT, moisture: MOISTURE.BONE_DRY, humidity: HUMIDTY.DRY, temperature: TEMPERATURE.HOT),
-        Plant(name: "Just Thrivin'", photo: "IMG_5720", idealLighting: LIGHTING.SHADE, moisture: MOISTURE.DRY, humidity: HUMIDTY.NORMAL, temperature: TEMPERATURE.NORMAL)
-    ]
+    @State private var plants = PlantList.plants
     @State private var latestData: PlantData = PlantData(id: "", lightIntensity: 800, moisture: 30, humidity: 36, temperature: 20, battery: 80, charging: false, timestamp: Date())
     let user = Auth.auth().currentUser
     @State var notificationsAreAllowed: Bool = false;
@@ -104,15 +116,14 @@ struct PlantTableView: View {
                     }) {
                         Text("Sign Out").font(.title3)
                     }
-                }.padding(.top)
+                }.isDetailLink(false).padding(.top)
             }
         }
-        .navigationBarBackButtonHidden()
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
         .onAppear {
             PlantDataRepository().getLimitedDataFromFirebase(limitBy: 1) { dataArray in
                 latestData = dataArray[0]
-                
-                handleNotifications()
             }
         }
     }
@@ -124,15 +135,6 @@ struct PlantTableView: View {
             print("successfully signed out")
         } catch let error {
             print ("Error signing out: %@", error)
-        }
-    }
-    
-    func handleNotifications() {
-        notificationsAreAllowed = UserRepository().geUsertNotificationSettings()
-        if (notificationsAreAllowed) {
-            print("so far so good!")
-        } else {
-            print("didn't remember settings")
         }
     }
 }

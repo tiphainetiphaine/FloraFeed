@@ -67,7 +67,7 @@ struct PlantDetailView: View {
                 .edgesIgnoringSafeArea(.bottom)
             }
         }.onAppear(perform: {
-            selectedLighting = plant.idealLighting;
+            selectedLighting = plant.lighting;
             selectedMoisture = plant.moisture;
             selectedHumidity = plant.humidity;
             selectedTemperature = plant.temperature;
@@ -75,7 +75,7 @@ struct PlantDetailView: View {
     }
     
     func lightingChange(lighting: LIGHTING) {
-        plant.idealLighting = lighting;
+        plant.lighting = lighting;
     }
     
     func moistureChange(moisture: MOISTURE) {
