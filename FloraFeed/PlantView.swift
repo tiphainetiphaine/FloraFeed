@@ -80,10 +80,6 @@ struct HealthView: View {
     
     func getColorForHealth(data:PlantData) -> Color {
         let allHealthStats = PlantDataTransformer().getAllPlantHealth(latestData: latestData, plant: plant, allData: nil)
-        print("humidity "+allHealthStats.humidity.description)
-        print("lighting "+allHealthStats.lighting.description)
-        print("moisture "+allHealthStats.moisture.description)
-        print("temperature "+allHealthStats.temperature.description)
 
         if (allHealthStats.humidity && allHealthStats.lighting && allHealthStats.moisture && allHealthStats.temperature) {
             return .green
