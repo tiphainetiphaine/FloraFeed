@@ -16,14 +16,14 @@ import UserNotifications
 struct UserRepository {
     func geUsertNotificationSettings() -> Bool {
         var notificationsAreAllowed: Bool = false;
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            if (settings.alertSetting == .enabled) {
-                notificationsAreAllowed = true
-            }
-            if (settings.authorizationStatus == .authorized) {
-                notificationsAreAllowed = true
-            }
-        }
+//        UNUserNotificationCenter.current().getNotificationSettings( completionHandler: { settings in
+//            if (settings.alertSetting == .enabled || settings.badgeSetting == .enabled) {
+//                notificationsAreAllowed = true
+//            }
+//            if (settings.authorizationStatus == .authorized) {
+//                notificationsAreAllowed = true
+//            }
+//        })
         let isNotificationEnabled = UIApplication.shared.currentUserNotificationSettings?.types.contains(UIUserNotificationType.alert)
         if (isNotificationEnabled == true) {
             notificationsAreAllowed = true

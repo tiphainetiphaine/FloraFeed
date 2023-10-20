@@ -23,74 +23,77 @@ struct LoginView: View {
     
     //todo update colour scheme etc
     var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Spacer()
-            
-            TextField("Email",
-                      text: $email ,
-                      prompt: Text("Email").foregroundColor(.blue)
-            )
-            .padding(10)
-            .overlay {
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(.blue, lineWidth: 2)
-            }
-            .padding(.horizontal)
-            
-            HStack {
-                Group {
-                    if showPassword {
-                        TextField("Password",
-                                  text: $password,
-                                  prompt: Text("Password").foregroundColor(.red))
-                    } else {
-                        SecureField("Password",
-                                    text: $password,
-                                    prompt: Text("Password").foregroundColor(.red))
-                    }
-                }
+        NavigationView {
+            VStack(alignment: .leading, spacing: 15) {
+                Spacer()
+                
+                TextField("Email",
+                          text: $email ,
+                          prompt: Text("Email").foregroundColor(.blue)
+                )
                 .padding(10)
                 .overlay {
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(.red, lineWidth: 2)
+                        .stroke(.blue, lineWidth: 2)
                 }
-                Button {
-                    showPassword.toggle()
-                } label: {
-                    Image(systemName: showPassword ? "eye.slash" : "eye")
-                        .foregroundColor(.red)
-                }
+                .padding(.horizontal)
                 
-            }.padding(.horizontal)
-            
-            Spacer()
-            
-            NavigationLink(destination: PlantTableView(), isActive: $userIsLoggedIn) {
-                Button(action: {
-                    handleFirebaseLogin()
-                }, label: {
-                    Text("Login")
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.white)
-                })
-                .frame(height: 50)
-                .frame(maxWidth: .infinity)
-                .background(
-                    loginIsDisabled ? LinearGradient(colors: [.gray], startPoint: .topLeading, endPoint: .bottomTrailing) :
-                        LinearGradient(colors: [.blue, .red], startPoint: .topLeading, endPoint: .bottomTrailing)
-                )
-                .cornerRadius(20)
-                .disabled(loginIsDisabled)
-                .padding()
-            }.isDetailLink(false)
-            .navigationBarBackButtonHidden()
-            .alert("Incorrect email or password", isPresented: $showingAlert) {
-                Button("OK", role: .cancel) {
-                    showingAlert = false
-                }
+                HStack {
+                    Group {
+                        if showPassword {
+                            TextField("Password",
+                                      text: $password,
+                                      prompt: Text("Password").foregroundColor(.red))
+                        } else {
+                            SecureField("Password",
+                                        text: $password,
+                                        prompt: Text("Password").foregroundColor(.red))
+                        }
+                    }
+                    .padding(10)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(.red, lineWidth: 2)
+                    }
+                    Button {
+                        showPassword.toggle()
+                    } label: {
+                        Image(systemName: showPassword ? "eye.slash" : "eye")
+                            .foregroundColor(.red)
+                    }
+                    
+                }.padding(.horizontal)
+                
+                Spacer()
+                
+                NavigationLink(destination: PlantTableView(), isActive: $userIsLoggedIn) {
+                    Button(action: {
+                        handleFirebaseLogin()
+                    }, label: {
+                        Text("Login")
+                            .font(.title2)
+                            .bold()
+                            .foregroundColor(.white)
+                    })
+                    .frame(height: 50)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        loginIsDisabled ? LinearGradient(colors: [.gray], startPoint: .topLeading, endPoint: .bottomTrailing) :
+                            LinearGradient(colors: [.blue, .red], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
+                    .cornerRadius(20)
+                    .disabled(loginIsDisabled)
+                    .padding()
+                }.isDetailLink(false)
+                    
+                    .alert("Incorrect email or password", isPresented: $showingAlert) {
+                        Button("OK", role: .cancel) {
+                            showingAlert = false
+                        }
+                    }
             }
-        }
+        }.navigationBarBackButtonHidden()
+            .navigationBarHidden(true)
     }
     
     func handleFirebaseLogin() {
