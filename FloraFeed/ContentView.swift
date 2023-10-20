@@ -23,7 +23,7 @@ struct ContentView: View {
     @State private var orderedDataLimited: [PlantData] = [];
     @State private var averageLightIntensity: Int = 0;
     @State private var isLightingIdeal: Bool = false;
-    @State private var plantNeedsWatering: Bool = false;
+    @State private var isMoistureIdeal: Bool = false;
     @State private var isHumidityIdeal: Bool = false;
     @State private var isTemperatureIdeal: Bool = false;
     @State private var selectedData: DATA_RANGE = DATA_RANGE.HOURS;
@@ -65,7 +65,7 @@ struct ContentView: View {
                     .chartYScale(domain: [0, 100])
                 }
                 .padding()
-                Text(plantNeedsWatering == true ? Constants.ContentView.WATERING :  Constants.ContentView.NO_WATERING).padding()
+                Text(isMoistureIdeal == true ? Constants.ContentView.NO_WATERING :  Constants.ContentView.WATERING).padding()
                 VStack {
                     Text("Humidity (%)").bold()
                     Chart {
@@ -109,7 +109,7 @@ struct ContentView: View {
                     
                     self.isLightingIdeal = PlantDataTransformer().isLightingIdeal(averageLightLevel: averageLightIntensity, idealLighting: plant.lighting)
                     
-                    plantNeedsWatering = PlantDataTransformer().isMoistureLow(latestData: latestData, idealMoistureLevel: plant.moisture)
+                    self.isMoistureIdeal = PlantDataTransformer().isMoistureIdeal(latestData: latestData, idealMoistureLevel: plant.moisture)
                     
                     self.isHumidityIdeal = PlantDataTransformer().isHumidityIdeal(latestData: latestData, idealHumidity: plant.humidity)
                     

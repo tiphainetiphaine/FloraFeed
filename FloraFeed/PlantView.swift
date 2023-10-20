@@ -34,7 +34,7 @@ struct PlantView: View {
             Text(plant.name)
                 .font(.headline)
                 .lineLimit(1)
-            HealthView(latestData: latestData)
+            HealthView(plant: plant, latestData: latestData)
             Spacer()
         }
         .padding(.vertical, 8)
@@ -42,6 +42,7 @@ struct PlantView: View {
 }
 
 struct HealthView: View {
+    let plant: Plant
     let latestData: PlantData;
     
     var body: some View {
@@ -78,7 +79,17 @@ struct HealthView: View {
     }
     
     func getColorForHealth(data:PlantData) -> Color {
-        return .green
+        let allHealthStats = PlantDataTransformer().getAllPlantHealth(latestData: latestData, plant: plant, allData: nil)
+        print("humidity "+allHealthStats.humidity.description)
+        print("lighting "+allHealthStats.lighting.description)
+        print("moisture "+allHealthStats.moisture.description)
+        print("temperature "+allHealthStats.temperature.description)
+
+        if (allHealthStats.humidity && allHealthStats.lighting && allHealthStats.moisture && allHealthStats.temperature) {
+            return .green
+        } else {
+            return .orange
+        }
     }
 }
 

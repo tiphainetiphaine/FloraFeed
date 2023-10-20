@@ -86,6 +86,20 @@ struct PlantDataTransformer {
         return average
     }
     
+    func getAllPlantHealth(latestData: PlantData, plant: Plant, allData:[PlantData]?) -> (lighting: Bool, moisture: Bool, humidity: Bool, temperature: Bool) {
+        var lighting: Bool = false
+        if (allData != nil) {
+            lighting = isLightingIdeal(averageLightLevel: calculateAverageLightIntensityForThePeriod(timeLimitedData: allData!), idealLighting: plant.lighting)
+        } else {
+            lighting = isLightingIdeal(averageLightLevel: latestData.lightIntensity, idealLighting: plant.lighting)
+        }
+        let moisture = isMoistureIdeal(latestData: latestData, idealMoistureLevel: plant.moisture)
+        let humidity = isHumidityIdeal(latestData: latestData, idealHumidity: plant.humidity)
+        let temperature = isTemperatureIdeal(latestData: latestData, idealTemperature: plant.temperature)
+        
+        return (lighting: lighting, moisture: moisture, humidity: humidity, temperature: temperature)
+    }
+    
     func isLightingIdeal(averageLightLevel: Int, idealLighting: LIGHTING) -> Bool {
         switch idealLighting {
         case .BRIGHT_LIGHT:
@@ -95,12 +109,12 @@ struct PlantDataTransformer {
         }
     }
     
-    func isMoistureLow(latestData: PlantData, idealMoistureLevel: MOISTURE) -> Bool {
+    func isMoistureIdeal(latestData: PlantData, idealMoistureLevel: MOISTURE) -> Bool {
         switch idealMoistureLevel {
         case .BONE_DRY:
-            return getAdjustedMoisture(data: latestData) < idealMoistureLevel.level
+            return getAdjustedMoisture(data: latestData) > idealMoistureLevel.level
         case .DRY:
-            return getAdjustedMoisture(data: latestData) < idealMoistureLevel.level
+            return getAdjustedMoisture(data: latestData) > idealMoistureLevel.level
         }
     }
     
