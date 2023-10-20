@@ -62,6 +62,7 @@
 		4E40D1142ADF166D004ED37A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4E40D1132ADF166D004ED37A /* FirebaseStorage */; };
 		4E40D1162ADF166D004ED37A /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 4E40D1152ADF166D004ED37A /* FirebaseStorageCombine-Community */; };
 		4EB13F262AD84F14002C9BE2 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB13F252AD84F14002C9BE2 /* LoginView.swift */; };
+		DE2A74F42AE275BA005209A3 /* PlantList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2A74F32AE275BA005209A3 /* PlantList.swift */; };
 		DE4AEA8F2ABF62EC00D83F6E /* PlantDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4AEA8E2ABF62EC00D83F6E /* PlantDataTransformer.swift */; };
 		DE4AEA912ABF907000D83F6E /* PlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4AEA902ABF907000D83F6E /* PlantView.swift */; };
 		DE4AEA932ABFA0B200D83F6E /* PlantDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4AEA922ABFA0B200D83F6E /* PlantDetailView.swift */; };
@@ -104,6 +105,7 @@
 
 /* Begin PBXFileReference section */
 		4EB13F252AD84F14002C9BE2 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		DE2A74F32AE275BA005209A3 /* PlantList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantList.swift; sourceTree = "<group>"; };
 		DE4AEA8E2ABF62EC00D83F6E /* PlantDataTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDataTransformer.swift; sourceTree = "<group>"; };
 		DE4AEA902ABF907000D83F6E /* PlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantView.swift; sourceTree = "<group>"; };
 		DE4AEA922ABFA0B200D83F6E /* PlantDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailView.swift; sourceTree = "<group>"; };
@@ -241,8 +243,9 @@
 				DED2F4D12ABB8D7500417863 /* Preview Content */,
 				DED2F5142ABB986500417863 /* PlantDataRepository.swift */,
 				DE4AEA8E2ABF62EC00D83F6E /* PlantDataTransformer.swift */,
-				DEE373EE2AD2CB6D000B3BAD /* Constants.swift */,
 				DEABAC722AE135E0001F3E9A /* UserRepository.swift */,
+				DEE373EE2AD2CB6D000B3BAD /* Constants.swift */,
+				DE2A74F32AE275BA005209A3 /* PlantList.swift */,
 			);
 			path = FloraFeed;
 			sourceTree = "<group>";
@@ -413,6 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DED2F5152ABB986500417863 /* PlantDataRepository.swift in Sources */,
+				DE2A74F42AE275BA005209A3 /* PlantList.swift in Sources */,
 				DE4AEA932ABFA0B200D83F6E /* PlantDetailView.swift in Sources */,
 				DEABAC732AE135E0001F3E9A /* UserRepository.swift in Sources */,
 				DE4AEA8F2ABF62EC00D83F6E /* PlantDataTransformer.swift in Sources */,

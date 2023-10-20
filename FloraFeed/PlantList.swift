@@ -8,7 +8,7 @@
 import Foundation
 
 struct PlantList {
-    static let plants = [
+    static let plants: [Plant] = [
         Plant(name: "The Undying", photo: "IMG_5718", lighting: LIGHTING.SHADE, moisture: MOISTURE.DRY, humidity: HUMIDTY.NORMAL, temperature: TEMPERATURE.NORMAL),
         Plant(name: "Actually fake", photo: "IMG_5716", lighting: LIGHTING.SHADE, moisture: MOISTURE.BONE_DRY, humidity: HUMIDTY.DRY, temperature: TEMPERATURE.COLD),
         Plant(name: "On the edge", photo: "IMG_5721", lighting: LIGHTING.BRIGHT_LIGHT, moisture: MOISTURE.BONE_DRY, humidity: HUMIDTY.DRY, temperature: TEMPERATURE.HOT),

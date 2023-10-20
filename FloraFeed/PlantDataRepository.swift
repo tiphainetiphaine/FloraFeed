@@ -83,6 +83,27 @@ struct PlantDataRepository {
         }
     }
     
+    func getLimitedDataFromFirebaseAsync(limitBy: Int) async -> [PlantData]? {
+        do {
+            let querySnapshot = try await db.collection("plantData")
+                .order(by: "timestamp", descending: true).limit(to: limitBy)
+                .getDocuments()
+                    print("Successfully retrieved all plant data")
+                    var PlantDataArray: [PlantData] = []
+                    for document in querySnapshot.documents {
+                        print("\(document.documentID) => \(document.data())")
+                        let data = document.data()
+                        let id = document.documentID;
+                        let plant = PlantData(id: id, firebasePlantData: data)
+                        PlantDataArray.append(plant)
+                    }
+            return PlantDataArray
+        } catch let error {
+            print ("Error getting data from Firebase: %@", error)
+            return nil
+        }
+    }
+    
     func getLatestData(allPlantdata: [PlantData]) -> PlantData {
         return allPlantdata[0];
     }
