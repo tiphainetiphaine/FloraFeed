@@ -44,7 +44,7 @@ struct ContentView: View {
                         ForEach(orderedDataLimited) { data in
                             LineMark(
                                 x: .value("Date / Time", data.timestamp),
-                                y: .value("Light Intensity", getAdjustedLightIntensity(data: data))
+                                y: .value("Light Intensity", PlantDataTransformer().getAdjustedLightIntensity(data: data))
                             )
                         }
                     }
@@ -58,7 +58,7 @@ struct ContentView: View {
                         ForEach(orderedDataLimited) { data in
                             LineMark(
                                 x: .value("Date / Time", data.timestamp),
-                                y: .value("Moisture", getAdjustedMoisture(data: data))
+                                y: .value("Moisture", PlantDataTransformer().getAdjustedMoisture(data: data))
                             )
                         }
                     }
@@ -107,7 +107,7 @@ struct ContentView: View {
                     
                     averageLightIntensity = PlantDataTransformer().calculateAverageLightIntensityForThePeriod(timeLimitedData: arrayOfAllData)
                     
-                    self.isLightingIdeal = PlantDataTransformer().isLightingIdeal(averageLightLevel: averageLightIntensity, idealLighting: plant.idealLighting)
+                    self.isLightingIdeal = PlantDataTransformer().isLightingIdeal(averageLightLevel: averageLightIntensity, idealLighting: plant.lighting)
                     
                     plantNeedsWatering = PlantDataTransformer().isMoistureLow(latestData: latestData, idealMoistureLevel: plant.moisture)
                     
@@ -116,30 +116,6 @@ struct ContentView: View {
                     self.isTemperatureIdeal = PlantDataTransformer().isTemperatureIdeal(latestData: latestData, idealTemperature: plant.temperature)
                 });
         })
-    }
-    
-    func getAdjustedMoisture(data:PlantData) -> Int {
-        let adjustedMoisture: Int;
-        if (data.moisture > 100) {
-            adjustedMoisture = 100-(data.moisture-1000)*100/1500
-        } else {
-            adjustedMoisture = data.moisture
-        }
-        if adjustedMoisture > 100 {
-            return 100
-        } else if adjustedMoisture < 0 {
-            return 0
-        } else {
-            return adjustedMoisture
-        }
-    }
-    
-    func getAdjustedLightIntensity(data:PlantData) -> Int {
-        if (data.lightIntensity > 1500) {
-            return 100
-        } else {
-            return 100*data.lightIntensity/1500
-        }
     }
     
     func dataRangeChange(dataRange: DATA_RANGE) {
@@ -177,7 +153,7 @@ struct ContentView: View {
     func getLightingString() -> String {
         if (isLightingIdeal) {
             return Constants.ContentView.IDEAL_LIGHTING;
-        } else if (!isLightingIdeal && averageLightIntensity < plant.idealLighting.level) {
+        } else if (!isLightingIdeal && averageLightIntensity < plant.lighting.level) {
             return Constants.ContentView.TOO_DARK
         } else {
             return Constants.ContentView.TOO_BRIGHT

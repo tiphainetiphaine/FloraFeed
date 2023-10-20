@@ -98,9 +98,9 @@ struct PlantDataTransformer {
     func isMoistureLow(latestData: PlantData, idealMoistureLevel: MOISTURE) -> Bool {
         switch idealMoistureLevel {
         case .BONE_DRY:
-            return latestData.moisture < idealMoistureLevel.level
+            return getAdjustedMoisture(data: latestData) < idealMoistureLevel.level
         case .DRY:
-            return latestData.moisture < idealMoistureLevel.level
+            return getAdjustedMoisture(data: latestData) < idealMoistureLevel.level
         }
     }
     
@@ -123,6 +123,30 @@ struct PlantDataTransformer {
             return latestData.temperature <= idealTemperature.level && latestData.temperature > TEMPERATURE.COLD.level
         case .HOT:
             return latestData.temperature > idealTemperature.level
+        }
+    }
+    
+    func getAdjustedMoisture(data:PlantData) -> Int {
+        let adjustedMoisture: Int;
+        if (data.moisture > 100) {
+            adjustedMoisture = 100-(data.moisture-1500)*100/1000
+        } else {
+            adjustedMoisture = data.moisture
+        }
+        if adjustedMoisture > 100 {
+            return 100
+        } else if adjustedMoisture < 0 {
+            return 0
+        } else {
+            return adjustedMoisture
+        }
+    }
+    
+    func getAdjustedLightIntensity(data:PlantData) -> Int {
+        if (data.lightIntensity > 1500) {
+            return 100
+        } else {
+            return 100*data.lightIntensity/1500
         }
     }
 }
