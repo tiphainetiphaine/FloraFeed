@@ -70,7 +70,7 @@ struct HealthView: View {
         if (data.battery <= 72 ) {
             return .red
         } else {
-            return .black
+            return .primary
         }
     }
     
