@@ -51,7 +51,7 @@ struct ContentView: View {
                     .chartYScale(domain: [0, 100])
                 }
                 .padding()
-                Text(getLightingString()).padding()
+                Text(getLightingString(plant: plant)).padding()
                 VStack {
                     Text("Moisture (%)").bold()
                     Chart {
@@ -65,7 +65,7 @@ struct ContentView: View {
                     .chartYScale(domain: [0, 100])
                 }
                 .padding()
-                Text(isMoistureIdeal == true ? Constants.ContentView.NO_WATERING :  Constants.ContentView.WATERING).padding()
+                Text(getWateringString(plant:plant)).padding()
                 VStack {
                     Text("Humidity (%)").bold()
                     Chart {
@@ -79,7 +79,7 @@ struct ContentView: View {
                     .chartYScale(domain: [0, 100])
                 }
                 .padding()
-                Text(getHumidityString()).padding()
+                Text(getHumidityString(plant: plant)).padding()
                 VStack {
                     Text("Temperature (Degrees C)").bold()
                     Chart {
@@ -92,7 +92,7 @@ struct ContentView: View {
                     }
                 }
                 .padding()
-                Text(getTemperatureString()).padding()
+                Text(getTemperatureString(plant: plant)).padding()
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -106,6 +106,8 @@ struct ContentView: View {
                     orderedDataLimited = PlantDataRepository().getOrderedDataLimitedBy(limit: 6, allPlantdata: array);
                     
                     averageLightIntensity = PlantDataTransformer().calculateAverageLightIntensityForThePeriod(timeLimitedData: arrayOfAllData)
+                    
+                    UserDefaults.standard.set(averageLightIntensity, forKey: "AverageLightIntensity")
                     
                     self.isLightingIdeal = PlantDataTransformer().isLightingIdeal(averageLightLevel: averageLightIntensity, idealLighting: plant.lighting)
                     
@@ -131,50 +133,54 @@ struct ContentView: View {
         }
     }
     
-    func getHumidityString() -> String {
+    func getWateringString(plant: Plant) -> String {
+        return plant.name+(isMoistureIdeal == true ? Constants.ContentView.NO_WATERING :  Constants.ContentView.WATERING)
+    }
+    
+    func getHumidityString(plant: Plant) -> String {
         if (isHumidityIdeal) {
-            return  Constants.ContentView.IDEAL_HUMIDITY
+            return Constants.ContentView.IDEAL_HUMIDITY+plant.name+"."
         } else {
             switch plant.humidity {
             case .DRY:
-                return Constants.ContentView.TOO_HUMID
+                return Constants.ContentView.TOO_HUMID+plant.name+"."
             case .NORMAL:
                 if latestData.humidity > plant.humidity.level {
-                    return Constants.ContentView.TOO_HUMID
+                    return Constants.ContentView.TOO_HUMID+plant.name+"."
                 } else {
-                    return Constants.ContentView.TOO_DRY
+                    return Constants.ContentView.TOO_DRY+plant.name+"."
                 }
             case .HUMID:
-                return Constants.ContentView.TOO_DRY
+                return Constants.ContentView.TOO_DRY+plant.name+"."
             }
         }
     }
     
-    func getLightingString() -> String {
+    func getLightingString(plant: Plant) -> String {
         if (isLightingIdeal) {
-            return Constants.ContentView.IDEAL_LIGHTING;
+            return Constants.ContentView.IDEAL_LIGHTING+plant.name+".";
         } else if (!isLightingIdeal && averageLightIntensity < plant.lighting.level) {
-            return Constants.ContentView.TOO_DARK
+            return Constants.ContentView.TOO_DARK+plant.name+"."
         } else {
-            return Constants.ContentView.TOO_BRIGHT
+            return Constants.ContentView.TOO_BRIGHT+plant.name+"."
         }
     }
     
-    func getTemperatureString() -> String {
+    func getTemperatureString(plant: Plant) -> String {
         if (isTemperatureIdeal) {
-            return  Constants.ContentView.IDEAL_TEMPERATURE
+            return  Constants.ContentView.IDEAL_TEMPERATURE+plant.name+"."
         } else {
             switch plant.temperature {
             case .COLD:
-                return Constants.ContentView.TOO_HOT
+                return Constants.ContentView.TOO_HOT+plant.name+"."
             case .NORMAL:
                 if latestData.temperature > plant.temperature.level {
-                    return Constants.ContentView.TOO_HOT
+                    return Constants.ContentView.TOO_HOT+plant.name+"."
                 } else {
-                    return Constants.ContentView.TOO_COLD
+                    return Constants.ContentView.TOO_COLD+plant.name+"."
                 }
             case .HOT:
-                return Constants.ContentView.TOO_COLD
+                return Constants.ContentView.TOO_COLD+plant.name+"."
             }
         }
     }

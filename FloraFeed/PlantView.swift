@@ -22,6 +22,7 @@ struct Plant: Identifiable {
 struct PlantView: View {
     let plant: Plant
     let latestData: PlantData
+    let averageLightIntensity: Int
     
     var body: some View {
         HStack {
@@ -34,7 +35,7 @@ struct PlantView: View {
             Text(plant.name)
                 .font(.headline)
                 .lineLimit(1)
-            HealthView(plant: plant, latestData: latestData)
+            HealthView(plant: plant, latestData: latestData, averageLightIntensity: averageLightIntensity)
             Spacer()
         }
         .padding(.vertical, 8)
@@ -44,10 +45,11 @@ struct PlantView: View {
 struct HealthView: View {
     let plant: Plant
     let latestData: PlantData;
+    let averageLightIntensity: Int
     
     var body: some View {
         HStack {
-            getIconHealthStatus(data: latestData).foregroundStyle(getColorForHealth(data: latestData))
+            getIconHealthStatus(data: latestData).foregroundStyle(getColorForHealth(data: latestData, averageLightIntensity: averageLightIntensity))
             getIconForBatteryStatus(data: latestData).foregroundStyle(getColorForBattery(data: latestData))
         }
     }
@@ -78,8 +80,10 @@ struct HealthView: View {
         return Image(systemName: "leaf.circle")
     }
     
-    func getColorForHealth(data:PlantData) -> Color {
-        let allHealthStats = PlantDataTransformer().getAllPlantHealth(latestData: latestData, plant: plant, allData: nil)
+    func getColorForHealth(data:PlantData, averageLightIntensity: Int) -> Color {
+        print("averegaeLightIntensity is "+averageLightIntensity.description)
+        
+        let allHealthStats = PlantDataTransformer().getAllPlantHealth(latestData: latestData, plant: plant, averageLightIntensity: averageLightIntensity)
 
         if (allHealthStats.humidity && allHealthStats.lighting && allHealthStats.moisture && allHealthStats.temperature) {
             return .green
@@ -91,6 +95,7 @@ struct HealthView: View {
 
 struct PlantTableView: View {
     @State private var plants = PlantList.plants
+    @State private var averageLightIntensity = UserDefaults.standard.integer(forKey: "AverageLightIntensity")
     @State private var latestData: PlantData = PlantData(id: "", lightIntensity: 800, moisture: 30, humidity: 36, temperature: 20, battery: 80, charging: false, timestamp: Date())
     let user = Auth.auth().currentUser
     @State var notificationsAreAllowed: Bool = false;
@@ -102,7 +107,7 @@ struct PlantTableView: View {
                 List {
                     ForEach(plants) { plant in
                         NavigationLink(destination: PlantDetailView(plant: plant, latestData: latestData)) {
-                            PlantView(plant: plant, latestData: latestData)
+                            PlantView(plant: plant, latestData: latestData, averageLightIntensity: averageLightIntensity)
                         }
                     }
                     .onDelete { indexSet in

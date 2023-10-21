@@ -86,10 +86,10 @@ struct PlantDataTransformer {
         return average
     }
     
-    func getAllPlantHealth(latestData: PlantData, plant: Plant, allData:[PlantData]?) -> (lighting: Bool, moisture: Bool, humidity: Bool, temperature: Bool) {
+    func getAllPlantHealth(latestData: PlantData, plant: Plant, averageLightIntensity:Int) -> (lighting: Bool, moisture: Bool, humidity: Bool, temperature: Bool) {
         var lighting: Bool = false
-        if (allData != nil) {
-            lighting = isLightingIdeal(averageLightLevel: calculateAverageLightIntensityForThePeriod(timeLimitedData: allData!), idealLighting: plant.lighting)
+        if (averageLightIntensity != 0) {
+            lighting = isLightingIdeal(averageLightLevel: averageLightIntensity, idealLighting: plant.lighting)
         } else {
             lighting = isLightingIdeal(averageLightLevel: latestData.lightIntensity, idealLighting: plant.lighting)
         }
