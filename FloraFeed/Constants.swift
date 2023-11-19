@@ -18,7 +18,7 @@ struct Constants {
         static let TOO_BRIGHT = "Average light levels are too high in this location for "
         static let TOO_DARK = "Average light levels are too low in this location for "
         static let IDEAL_TEMPERATURE = "Temperature is ideal at this location for "
-        static let TOO_HOT = "It is too hot for this "
-        static let TOO_COLD = "It is too cold for this "
+        static let TOO_HOT = "It is too hot for "
+        static let TOO_COLD = "It is too cold for "
     }
 }
