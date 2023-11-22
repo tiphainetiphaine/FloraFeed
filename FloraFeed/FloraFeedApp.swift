@@ -57,11 +57,12 @@ struct FloraFeedApp: App {
     
     func getDataForEachPlant(data: PlantData) async {
         let plants: [Plant] = PlantList.plants
+        let batteryHealthy = data.battery > 72;
         
         for plant in plants {
             let allHealth = PlantDataTransformer().getAllPlantHealth(latestData: data, plant: plant, averageLightIntensity: averageLightIntensity)
-            if !(allHealth.humidity && allHealth.lighting && allHealth.moisture && allHealth.temperature) {
-                let notificationRequest = scheduleRequest(plant: plant, allHealth: (humidity: allHealth.humidity, temperature: allHealth.temperature, lighting: allHealth.lighting, moisture: allHealth.moisture))
+            if !(allHealth.humidity && allHealth.lighting && allHealth.moisture && allHealth.temperature && batteryHealthy) {
+                let notificationRequest = scheduleRequest(plant: plant, allHealth: (humidity: allHealth.humidity, temperature: allHealth.temperature, lighting: allHealth.lighting, moisture: allHealth.moisture, battery: batteryHealthy))
                 do {
                     try await UNUserNotificationCenter.current().add(notificationRequest)
                 } catch let error as NSError {
@@ -86,7 +87,7 @@ struct FloraFeedApp: App {
         return await PlantDataRepository().getLimitedDataFromFirebaseAsync(limitBy: 1)?[0]
     }
     
-    func scheduleRequest(plant: Plant, allHealth: (humidity: Bool, temperature: Bool, lighting: Bool, moisture: Bool)) -> UNNotificationRequest {
+    func scheduleRequest(plant: Plant, allHealth: (humidity: Bool, temperature: Bool, lighting: Bool, moisture: Bool, battery: Bool)) -> UNNotificationRequest {
         print("schedule notification entered")
         
         let content = UNMutableNotificationContent()
@@ -99,7 +100,7 @@ struct FloraFeedApp: App {
         return UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
     }
     
-    func getHelpString(name:String, allHealth: (humidity: Bool, temperature: Bool, lighting: Bool, moisture: Bool)) -> String {
+    func getHelpString(name:String, allHealth: (humidity: Bool, temperature: Bool, lighting: Bool, moisture: Bool, battery: Bool)) -> String {
         var helpString = ""
         if (!allHealth.moisture) {
             helpString.append(name+" needs watering! \n")
@@ -112,6 +113,9 @@ struct FloraFeedApp: App {
         }
         if (!allHealth.lighting) {
             helpString.append("Check the lighting conditions. \n")
+        }
+        if (!allHealth.battery) {
+            helpString.append("The battery needs charging! \n")
         }
         return helpString
     }
