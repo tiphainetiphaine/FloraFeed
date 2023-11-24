@@ -81,7 +81,7 @@ struct HealthView: View {
     }
     
     func getColorForHealth(data:PlantData, averageLightIntensity: Int) -> Color {
-        print("averegaeLightIntensity is "+averageLightIntensity.description)
+        print("averageLightIntensity is "+averageLightIntensity.description)
         
         let allHealthStats = PlantDataTransformer().getAllPlantHealth(latestData: latestData, plant: plant, averageLightIntensity: averageLightIntensity)
 

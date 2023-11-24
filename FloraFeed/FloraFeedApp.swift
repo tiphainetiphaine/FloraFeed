@@ -43,12 +43,15 @@ struct FloraFeedApp: App {
         .backgroundTask(.appRefresh("myAppRefresh")) {
             print("background task entered")
             
-            let latestData = await getLatestData()
-            
-            if (latestData != nil) {
-                print("latest data is not nil")
+            if Auth.auth().currentUser != nil {
+                print("confirmed user is logged in")
+                let latestData = await getLatestData()
                 
-                await getDataForEachPlant(data: latestData!)
+                if (latestData != nil) {
+                    print("latest data is not nil")
+                    
+                    await getDataForEachPlant(data: latestData!)
+                }
             }
             
             print("background work completed")
