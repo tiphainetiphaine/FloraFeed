@@ -77,7 +77,7 @@ struct FloraFeedApp: App {
     
     func scheduleAppRefresh() {
         let request = BGAppRefreshTaskRequest(identifier: "myAppRefresh")
-        request.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 60 * 3)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 0)
         do {
               try BGTaskScheduler.shared.submit(request)
               print("bg task scheduled")
@@ -104,22 +104,23 @@ struct FloraFeedApp: App {
     }
     
     func getHelpString(name:String, allHealth: (humidity: Bool, temperature: Bool, lighting: Bool, moisture: Bool, battery: Bool)) -> String {
-        var helpString = ""
+        var helpStringArray: [String] = []
         if (!allHealth.moisture) {
-            helpString.append(name+" needs watering! \n")
+            helpStringArray.append(name+" needs watering!")
         }
         if (!allHealth.humidity) {
-            helpString.append("Check the humidity. \n")
+            helpStringArray.append("Check the humidity.")
         }
         if (!allHealth.temperature) {
-            helpString.append("Check the temperature. \n")
+            helpStringArray.append("Check the temperature.")
         }
         if (!allHealth.lighting) {
-            helpString.append("Check the lighting conditions. \n")
+            helpStringArray.append("Check the lighting conditions.")
         }
         if (!allHealth.battery) {
-            helpString.append("The battery needs charging! \n")
+            helpStringArray.append("The battery needs charging!")
         }
+        let helpString = helpStringArray.joined(separator: "\n");
         return helpString
     }
 }
